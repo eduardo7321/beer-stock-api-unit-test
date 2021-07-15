@@ -51,6 +51,24 @@ public class BeerServiceTest {
     private BeerService beerService;
 
     @Test
+    void whenBeerInformedThenItShuldBeCreated() throws BeerAlreadyRegisteredException {
+        BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedSaveBeer = beerMapper.toModel(beerDTO);
+
+        // when
+        when(beerRepository.findByName(beerDTO.getName())).thenReturn(Optional.empty());
+        when(beerRepository.save(expectedSaveBeer)).thenReturn(expectedSaveBeer);
+
+        //then
+        BeerDTO createdBeerDTO = beerService.createBeer(beerDTO);
+
+        assertEquals(beerDTO.getId(), createdBeerDTO.getId());
+        assertEquals(beerDTO.getName(), createdBeerDTO.getName());
+
+    }
+
+    /*
+    @Test
     void whenBeerInformedThenItShouldBeCreated() throws BeerAlreadyRegisteredException {
         // given
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -255,3 +273,6 @@ public class BeerServiceTest {
 //        assertThrows(BeerNotFoundException.class, () -> beerService.decrement(INVALID_BEER_ID, quantityToDecrement));
 //    }
 }
+
+
+     */
